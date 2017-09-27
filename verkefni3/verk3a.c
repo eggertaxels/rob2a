@@ -33,7 +33,9 @@ task main()
   {
     //Driving Motor Control
     motor[leftMotor] = vexRT[Ch3] / 2;
-    motor[rightMotor] = vexRT[Ch2] / 2;
+    motor[rightMotor] = vexRT[Ch3] / 2;
+    motor[leftMotor] = vexRT[Ch2] / 2;
+    motor[rightMotor] = vexRT[Ch1] / 2;
 
     //Claw Control
     if(vexRT[Btn6U] == 1)
