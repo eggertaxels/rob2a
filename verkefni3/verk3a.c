@@ -33,9 +33,7 @@ task main()
   {
     //Driving Motor Control
     motor[leftMotor] = vexRT[Ch3] / 2;
-    motor[rightMotor] = vexRT[Ch3] / 2;
-    motor[leftMotor] = vexRT[Ch2] / 2;
-    motor[rightMotor] = vexRT[Ch1] / 2;
+    motor[rightMotor] = vexRT[Ch2] / 2;
 
     //Claw Control
     if(vexRT[Btn6U] == 1)
@@ -63,6 +61,13 @@ task main()
     else
     {
       motor[armMotor] = 0;
+    }
+
+    // Stop robot
+    if(vexRT[Btn7U] == 1)
+    {
+      motor[rightMotor] = 0;		  // Motor stops
+			motor[leftMotor]  = 0;
     }
   }
 }

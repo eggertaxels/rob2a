@@ -36,7 +36,7 @@ void reset_encoder(){
   SensorValue[leftEncoder] = 0;
 }
 void drive_forward(){
-	while(abs(SensorValue[leftEncoder]) < BASEROTATION)
+	while(abs(SensorValue[leftEncoder]) < BASEROTATION && vexRT[Btn7U] == 0)
   {
     //...Move Forward
     motor[rightMotor] = POWER;
@@ -44,7 +44,8 @@ void drive_forward(){
   }
 }
 void turn(int deg,bool leftRight){
-	while(abs(SensorValue[leftEncoder]) < deg*TURNCONST){
+	while(abs(SensorValue[leftEncoder]) < deg*TURNCONST && vexRT[Btn7U] == 0)
+    {
 		if(leftRight){
 		motor[rightMotor] = POWER;		  // Motor is stop
 		motor[leftMotor]  = -POWER;
@@ -68,11 +69,9 @@ task main()
 {
   wait1Msec(2000);                  // Wait 2000 milliseconds before continuing.
 
-if(vexRT[Btn7U] == 1)
+while(vexRT[Btn7U] == 0)
     {
-      motor[rightMotor] = 0;		  // Motor stops
-			motor[leftMotor]  = 0;
-    }
+
  reset_encoder();
   drive_forward();
   stop_rob();
@@ -93,7 +92,7 @@ if(vexRT[Btn7U] == 1)
   stop_rob();
   reset_encoder();
   drive_forward();
-
+}
  // motor[rightMotor] = 0;            /* Stop the motors once desired */
  // motor[leftMotor]  = 0;            /* distance has been reached.   */
 }
