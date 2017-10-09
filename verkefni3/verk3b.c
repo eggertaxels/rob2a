@@ -15,13 +15,9 @@
 |*                                                                                                    *|
 |*                                        ROBOT CONFIGURATION                                         *|
 |*    NOTES:                                                                                          *|
-|*    1)  Reversing 'rightMotor' (port 2) in the "Motors and Sensors Setup" is needed with the        *|
-|*        "Squarebot" mode, but may not be needed for all robot configurations.                       *|
-|*    2)  Changing the value of 'distance' will change how far your robot will travel.                *|
-|*        !! 360 is equal to one full rotation of the axel !!                                         *|
-|*    3)  Whichever encoder is being used for feedback should be cleared just before it starts        *|
-|*        counting by using the "SensorValue(encoder) = 0;".  This helps ensure consistancy.          *|
-|*    r1/r2 = TURNCONST                                                                                            *|
+|*    The same as the last project, but now with a button on the controller that can stop the machine *|
+|*                                                                                                    *|
+|*    r1/r2 = TURNCONST                                                                               *|
 |*    MOTORS & SENSORS:                                                                               *|
 |*    [I/O Port]          [Name]              [Type]                [Description]                     *|
 |*    Motor   - Port 2    rightMotor          VEX 3-wire module     Right side motor                  *|
