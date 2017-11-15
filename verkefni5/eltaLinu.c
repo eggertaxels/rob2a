@@ -14,10 +14,8 @@
 |*                                                                                                    *|
 |*                                        ROBOT CONFIGURATION                                         *|
 |*    NOTES:                                                                                          *|
-|*    1)  Reversing 'rightMotor' (port 2) in the "Motors and Sensors Setup" is needed with the        *|
-|*        "Squarebot" mode, but may not be needed for all robot configurations.                       *|
-|*    2)  Lighting conditions, line darkness, and surface lightness change from place to place,       *|
-|*        so the value of 'threshold' may need to be changed to better suit your environment.         *|
+|*    Program instructs robot to follow a line using the line follower sensors, by reading the values *|
+|*		of the sensors.																																								  *|
 |*                                                                                                    *|
 |*    MOTORS & SENSORS:                                                                               *|
 |*    [I/O Port]          [Name]              [Type]                [Description]                     *|
@@ -34,41 +32,47 @@ task main()
 {
   wait1Msec(2000);          // The program waits for 2000 milliseconds before continuing.
 
-  int threshold = 2700;      /* found by taking a reading on both DARK and LIGHT    */
-  int threshold2 = 2500;                        /* surfaces, adding them together, then dividing by 2. */
-  while(true)
-  {
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
-    displayLCDCenteredString(0, "LEFT  CNTR  RGHT");        //  Display   |
-    displayLCDPos(1,0);                                     //  Sensor    |
-    displayNextLCDNumber(SensorValue(lineFollowerLEFT));    //  Readings  |
-    displayLCDPos(1,6);                                     //  to LCD.   |
-    displayNextLCDNumber(SensorValue(lineFollowerCENTER));  //            |
-    displayLCDPos(1,12);                                    //  L  C  R   |
-    displayNextLCDNumber(SensorValue(lineFollowerRIGHT));   //  x  x  x   |
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+  int threshold = 200;      /* found by taking a reading on both DARK and LIGHT    */
+  int threshold2 = 1500;                        /* surfaces, adding them together, then dividing by 2. */
+	  while(vexRT[Btn7U] == 0)
+	  {
+	    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+	    displayLCDCenteredString(0, "LEFT  CNTR  RGHT");        //  Display   |
+	    displayLCDPos(1,0);                                     //  Sensor    |
+	    displayNextLCDNumber(SensorValue(lineFollowerLEFT));    //  Readings  |
+	    displayLCDPos(1,6);                                     //  to LCD.   |
+	    displayNextLCDNumber(SensorValue(lineFollowerCENTER));  //            |
+	    displayLCDPos(1,12);                                    //  L  C  R   |
+	    displayNextLCDNumber(SensorValue(lineFollowerRIGHT));   //  x  x  x   |
+	    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
 
-    // RIGHT sensor sees dark:
-    if(SensorValue(lineFollowerRIGHT) > threshold)
-    {
-      // counter-steer right:
-      motor[leftMotor]  = 80;
-      motor[rightMotor] = 0;
-    }
-    // CENTER sensor sees dark:
-    if(SensorValue(lineFollowerCENTER) > threshold2)
-    {
-      // go straight
-      motor[leftMotor]  = 80;
-      motor[rightMotor] = 80;
-    }
-    // LEFT sensor sees dark:
-    if(SensorValue(lineFollowerLEFT) > threshold)
-    {
-      // counter-steer left:
-      motor[leftMotor]  = 0;
-      motor[rightMotor] = 80;
-    }
-  }
+	    // RIGHT sensor sees dark:
+	    if(SensorValue(lineFollowerRIGHT) > threshold)
+	    {
+	      // counter-steer right:
+	      motor[leftMotor]  = 60;
+	      motor[rightMotor] = -40;
+	    }
+	    // CENTER sensor sees dark:
+	    if(SensorValue(lineFollowerCENTER) > threshold2)
+	    {
+	      // go straight
+	      motor[leftMotor]  = 64;
+	      motor[rightMotor] = 64;
+	    }
+	    // LEFT sensor sees dark:
+	    if(SensorValue(lineFollowerLEFT) > threshold)
+	    {
+	      // counter-steer left:
+	      motor[leftMotor]  = -40;
+	      motor[rightMotor] = 60;
+	    }
+	    /*if(SensorValue(lineFollowerLEFT) < threshold && SensorValue(lineFollowerCENTER) < threshold && SensorValue(lineFollowerRIGHT) < threshold)
+	    {
+	      // counter-steer left:
+	      motor[leftMotor]  = 0;
+	      motor[rightMotor] = 0;
+	    }*/
+	  }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
