@@ -1,3 +1,5 @@
+#pragma config(Sensor, dgtl5,  leftEncoder,    sensorQuadEncoder)
+#pragma config(Sensor, dgtl7,  rightEncoder,   sensorQuadEncoder)
 #pragma config(Sensor, dgtl1,  sonarSensor,    sensorSONAR_cm)
 #pragma config(Sensor, in3,    lineFollowerRIGHT, sensorLineFollower)
 #pragma config(Sensor, in4,    lineFollowerCENTER, sensorLineFollower)
@@ -29,53 +31,102 @@
 |*    Analog - Port 2     lineFollowerCENTER  VEX Light Sensor      Front-center, facing down         *|
 |*    Analog - Port 3     lineFollowerLEFT    VEX Light Sensor      Front-left, facing down           *|
 \*-----------------------------------------------------------------------------------------------4246-*/
+void resetEncoder(){
+	SensorValue[rightEncoder] = 0;
+  SensorValue[leftEncoder] = 0;
+}
+void armDown(){
+	motor[armMotor] = 40;
+	wait1Msec(1000);
+	motor[armMotor] = 0;
+	wait1Msec(1000);
+}
+void armUp(){
+	motor[armMotor] = -40;
+	wait1Msec(3000);
+	motor[armMotor] = 0;
+	wait1Msec(1000);
+}
+void stopMotors(){
+	motor[leftMotor]  = 0;
+	motor[rightMotor] = 0;
+}
+void clawClose(){
+	motor[clawMotor] = -60;
+	wait1Msec(1000);
+	motor[clawMotor] = 0;
+	wait1Msec(1000);
+}
+void clawOpen(){
+	motor[clawMotor] = 60;
+	wait1Msec(1000);
+	motor[clawMotor] = 0;
+	wait1Msec(1000);
+}
+/**Turn Robot**/
+void turn(int deg,bool leftRight){
+	while(abs(SensorValue[leftEncoder]) < deg*TURNCONST && vexRT[Btn7U] == 0)
+    {
+		if(leftRight){
+		motor[rightMotor] = POWER;		  // Motor is stop
+		motor[leftMotor]  = -POWER;
+		}
+		else{
+				motor[rightMotor] = -POWER;		  // Motor is stop
+				motor[leftMotor]  = POWER;
+		}
+	}
+}
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++| MAIN |+++++++++++++++++++++++++++++++++++++++++++++++
 task main()
 {
-  wait1Msec(2000);          // The program waits for 2000 milliseconds before continuing.
+	wait1Msec(2000);          // The program waits for 2000 milliseconds before continuing.
 
-	  while(vexRT[Btn7U] == 0)
-	  {
-	    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
-	    displayLCDCenteredString(0, "LEFT  CNTR  RGHT");        //  Display   |
-	    displayLCDPos(1,0);                                     //  Sensor    |
-	    displayNextLCDNumber(SensorValue(lineFollowerLEFT));    //  Readings  |
-	    displayLCDPos(1,6);                                     //  to LCD.   |
-	    displayNextLCDNumber(SensorValue(lineFollowerCENTER));  //            |
-	    displayLCDPos(1,12);                                    //  L  C  R   |
-	    displayNextLCDNumber(SensorValue(lineFollowerRIGHT));   //  x  x  x   |
-	    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+	while(vexRT[Btn7U] == 0)
+	{
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+		displayLCDCenteredString(0, "LEFT  CNTR  RGHT");        //  Display   |
+		displayLCDPos(1,0);                                     //  Sensor    |
+		displayNextLCDNumber(SensorValue(lineFollowerLEFT));    //  Readings  |
+		displayLCDPos(1,6);                                     //  to LCD.   |
+		displayNextLCDNumber(SensorValue(lineFollowerCENTER));  //            |
+		displayLCDPos(1,12);                                    //  L  C  R   |
+		displayNextLCDNumber(SensorValue(lineFollowerRIGHT));   //  x  x  x   |
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
 
-	    // RIGHT sensor sees dark:
-	    if(SensorValue(lineFollowerRIGHT) > THRESHOLD)
-	    {
-	      // counter-steer right:
-	      motor[leftMotor]  = 60;
-	      motor[rightMotor] = -40;
-	    }
-	    // CENTER sensor sees dark:
-	    if(SensorValue(lineFollowerCENTER) > THRESHOLD2)
-	    {
-	      // go straight
-	      motor[leftMotor]  = POWER;
-	      motor[rightMotor] = POWER;
-	    }
-	    // LEFT sensor sees dark:
-	    if(SensorValue(lineFollowerLEFT) > THRESHOLD)
-	    {
-	      // counter-steer left:
-	      motor[leftMotor]  = -40;
-	      motor[rightMotor] = 60;
-	    }
-	    if(SensorValue(sonarSensor) <= 40){
-				motor[rightMotor] = 0;
-				motor[leftMotor]  = 0;
-				motor[armMotor] = 20;
-	    	wait1Msec(2500);
-				wait1Msec(3000);
-			}
-	  }
+		// RIGHT sensor sees dark:
+		if(SensorValue(lineFollowerRIGHT) > THRESHOLD)
+		{
+			// counter-steer right:
+			motor[leftMotor]  = 60;
+			motor[rightMotor] = -40;
+		}
+		// CENTER sensor sees dark:
+		if(SensorValue(lineFollowerCENTER) > THRESHOLD2)
+		{
+			// go straight
+			motor[leftMotor]  = POWER;
+			motor[rightMotor] = POWER;
+		}
+		// LEFT sensor sees dark:
+		if(SensorValue(lineFollowerLEFT) > THRESHOLD)
+		{
+			// counter-steer left:
+			motor[leftMotor]  = -40;
+			motor[rightMotor] = 60;
+		}
+		else if(SensorValue(sonarSensor) < 20 || SensorValue(sonarSensor) == -1)
+		{
+			stopMotors();
+			clawOpen();
+			armDown();
+			clawClose();
+			armUp();
+			resetEncoder();
+			turn(180,true);
+		}
+	}
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
