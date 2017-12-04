@@ -14,14 +14,12 @@
 /*----------------------------------------------------------------------------------------------------*\
 |*                             	    - Triple Sensor Line Tracking -                                   *|
 |*                                      ROBOTC on VEX 2.0 CORTEX                                      *|
-|*                                                                                                    *|
-|*  This program uses 3 VEX Line Follower Sensors to track a black line on a light(er) surface.       *|
-|*  There is a two second pause at the beginning of the program.                                      *|
+|*                                                                                                    *|                                     *|
 |*                                                                                                    *|
 |*                                        ROBOT CONFIGURATION                                         *|
-|*    NOTES:                                                                                          *|
-|*    Program instructs robot to follow a line using the line follower sensors, by reading the values *|
-|*		of the sensors.																																								  *|
+|*    NOTES:																																													*|
+|*			Robot follows the line, stops when sees object, picks it up and bool becomes true.						*|
+|*			Robot follows line again but when sees object he only lets go and breaks.											*|
 |*                                                                                                    *|
 |*    MOTORS & SENSORS:                                                                               *|
 |*    [I/O Port]          [Name]              [Type]                [Description]                     *|
@@ -43,7 +41,7 @@ void armDown(){
 }
 void armUp(){
 	motor[armMotor] = -40;
-	wait1Msec(3000);
+	wait1Msec(2000);
 	motor[armMotor] = 0;
 	wait1Msec(1000);
 }
@@ -77,7 +75,7 @@ void turn(int deg,bool leftRight){
 		}
 	}
 }
-
+bool endtask = false;
 
 //+++++++++++++++++++++++++++++++++++++++++++++| MAIN |+++++++++++++++++++++++++++++++++++++++++++++++
 task main()
@@ -100,8 +98,8 @@ task main()
 		if(SensorValue(lineFollowerRIGHT) > THRESHOLD)
 		{
 			// counter-steer right:
-			motor[leftMotor]  = 60;
-			motor[rightMotor] = -40;
+			motor[leftMotor]  = SIDEPOWER;
+			motor[rightMotor] = SIDEMINPOWER;
 		}
 		// CENTER sensor sees dark:
 		if(SensorValue(lineFollowerCENTER) > THRESHOLD2)
@@ -114,18 +112,23 @@ task main()
 		if(SensorValue(lineFollowerLEFT) > THRESHOLD)
 		{
 			// counter-steer left:
-			motor[leftMotor]  = -40;
-			motor[rightMotor] = 60;
+			motor[leftMotor]  = SIDEMINPOWER;
+			motor[rightMotor] = SIDEPOWER;
 		}
-		else if(SensorValue(sonarSensor) < 20 || SensorValue(sonarSensor) == -1)
+		else if(SensorValue(sonarSensor) < 15 || SensorValue(sonarSensor) == -1)
 		{
 			stopMotors();
+			if(endtask){
+			clawOpen();
+			break;
+			}
 			clawOpen();
 			armDown();
 			clawClose();
 			armUp();
 			resetEncoder();
-			turn(180,true);
+			turn(150,true);
+			endtask = true;
 		}
 	}
 }
