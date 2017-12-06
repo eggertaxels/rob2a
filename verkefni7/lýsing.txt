@@ -1,0 +1,3 @@
+Róbot byrjar á byrjunarreit og leggur af stað. Þetta er völundarhús og línurnar eru veggir.
+Hann fer eftir kóða og braut, þangað til hann skynjar rauðann, eða lokapunkt.
+Hann myndi þurfa beyja 90 gráður til hægri og vinstri til skiptis en svo vinstri fjórum sinnum. Svo aftur til skiptis þangað til hann finnur lokareit.
