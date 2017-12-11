@@ -1,3 +1,8 @@
 Róbot byrjar á byrjunarreit og leggur af stað. Þetta er völundarhús og línurnar eru veggir.
-Hann fer eftir kóða og braut, þangað til hann skynjar rauðann, eða lokapunkt.
+Hann fer eftir kóða og braut, þangað til hann skynjar lokapunkt (sem við vitum ekki hvað).
 Hann myndi þurfa beyja 90 gráður til hægri og vinstri til skiptis en svo vinstri fjórum sinnum. Svo aftur til skiptis þangað til hann finnur lokareit.
+Við myndum vinna með mótóra og tíma í þessu verkefni.
+Við gerum void sem lætur hann fara áfram í x sek.
+Svo annað void sem lætur róbot snúa 90 gráður.
+Tvö void sem fara lengra með róbot en hin.
+Og svo void sem skynjar lokapunkt.

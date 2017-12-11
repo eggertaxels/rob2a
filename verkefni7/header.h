@@ -1,0 +1,7 @@
+#define BASEROTATION 490
+#define POWER 64
+const float TURNCONST = 3.4;
+#define THRESHOLD 200
+#define THRESHOLD2 1500
+#define SIDEPOWER 60
+#define SIDEMINPOWER -40
